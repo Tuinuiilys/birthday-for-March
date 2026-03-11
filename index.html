@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Happy Birthday</title>
+<style>
+body{
+    background:#ffe6f0;
+    font-family:sans-serif;
+    text-align:center;
+    padding-top:100px;
+}
+
+h1{
+    font-size:50px;
+    color:#ff4d88;
+}
+
+p{
+    font-size:22px;
+}
+button{
+    padding:12px 20px;
+    font-size:18px;
+    background:#ff4d88;
+    color:white;
+    border:none;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎂 Happy Birthday 🎂</h1>
+
+<p>
+สุขสันต์วันเกิดนะ  
+ขอบคุณที่เข้ามาในชีวิตเรา 🙂
+</p>
+
+<button onclick="showMessage()">กดตรงนี้สิ</button>
+
+<p id="secret"></p>
+
+<script>
+function showMessage(){
+document.getElementById("secret").innerHTML =
+"ขอให้ปีนี้เป็นปีที่ดีสำหรับเธอ และมีเราคอยอยู่ข้างๆนะ ❤️";
+}
+</script>
+
+</body>
+</html>
