@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Happy Birthday คุณมีนา</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Sriracha&family=Prompt:wght@300;400&display=swap" rel="stylesheet">
@@ -11,27 +13,22 @@
 
 body{
 margin:0;
-overflow:hidden;
 background:linear-gradient(135deg,#ffd6ec,#ffeaf6);
 font-family:'Prompt',sans-serif;
 text-align:center;
+overflow:hidden;
 }
 
 h1{
 font-family:'Sriracha';
-font-size:48px;
+font-size:52px;
 color:#ff2d75;
-}
-
-.gallery{
-width:220px;
-margin:auto;
-position:relative;
+margin-top:30px;
 }
 
 .gallery img{
-width:220px;
-height:220px;
+width:200px;
+height:200px;
 border-radius:50%;
 object-fit:cover;
 border:6px solid white;
@@ -44,12 +41,13 @@ border:none;
 border-radius:25px;
 background:#ff4f9f;
 color:white;
-margin:5px;
+margin:6px;
 cursor:pointer;
 }
 
 .cake{
 font-size:80px;
+margin-top:10px;
 }
 
 .candles span{
@@ -76,11 +74,22 @@ left:0;
 pointer-events:none;
 }
 
+.star{
+position:absolute;
+color:gold;
+font-size:18px;
+animation:twinkle 2s infinite;
+}
+
+@keyframes twinkle{
+0%,100%{opacity:.3}
+50%{opacity:1}
+}
+
 .confetti{
 position:absolute;
 width:6px;
 height:6px;
-background:red;
 animation:fall 3s linear forwards;
 }
 
@@ -89,6 +98,7 @@ to{transform:translateY(500px) rotate(720deg)}
 }
 
 </style>
+
 </head>
 
 <body>
@@ -105,22 +115,19 @@ to{transform:translateY(500px) rotate(720deg)}
 <div class="cake">🎂</div>
 <div class="candles" id="candles"></div>
 
-<button onclick="startMic()">🎤 เป่าเทียน</button>
-<button onclick="heartFromPhoto()">💘 ส่งหัวใจ</button>
-<button onclick="playMusic()">🎵 เปิดเพลง</button>
-
-<br>
-
+<button onclick="blow()">🎤 เป่าเทียน</button>
+<button onclick="heartBurst()">💘 ส่งหัวใจ</button>
 <button onclick="openGift()">🎁 เปิดของขวัญ</button>
-
-<br>
-
+<button onclick="playMusic()">🎵 เปิดเพลง</button>
 <button onclick="startGame()">🎮 Mini Game</button>
-<span id="score">0</span>
+
+<div>Score: <span id="score">0</span></div>
+
+<audio id="music">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c7d4d2f6c.mp3?filename=birthday-party-112194.mp3">
+</audio>
 
 <canvas id="fireworks"></canvas>
-
-<iframe id="music" width="0" height="0"></iframe>
 
 <script>
 
@@ -144,46 +151,20 @@ s.innerHTML="🕯";
 candles.appendChild(s);
 }
 
-/* mic blow */
+/* blow candle */
 
-function startMic(){
-
-navigator.mediaDevices.getUserMedia({audio:true})
-.then(stream=>{
-
-const audioCtx=new AudioContext();
-const mic=audioCtx.createMediaStreamSource(stream);
-const analyser=audioCtx.createAnalyser();
-
-mic.connect(analyser);
-
-let data=new Uint8Array(analyser.frequencyBinCount);
-
-function detect(){
-analyser.getByteFrequencyData(data);
-let volume=data.reduce((a,b)=>a+b)/data.length;
-
-if(volume>80){
+function blow(){
 document.querySelectorAll("#candles span")
 .forEach(c=>c.innerHTML="💨");
 }
 
-requestAnimationFrame(detect);
-}
-
-detect();
-
-});
-
-}
-
 /* hearts */
 
-function heartFromPhoto(){
+function heartBurst(){
 
 let rect=document.getElementById("photo").getBoundingClientRect();
 
-for(let i=0;i<20;i++){
+for(let i=0;i<30;i++){
 
 let h=document.createElement("div");
 
@@ -215,8 +196,7 @@ c.className="confetti";
 
 c.style.left=Math.random()*window.innerWidth+"px";
 
-c.style.background=
-`hsl(${Math.random()*360},80%,60%)`;
+c.style.background=`hsl(${Math.random()*360},80%,60%)`;
 
 document.body.appendChild(c);
 
@@ -228,14 +208,48 @@ startFireworks();
 
 }
 
+/* music */
+
+function playMusic(){
+document.getElementById("music").play();
+}
+
+/* mini game */
+
+let score=0;
+
+function startGame(){
+
+let heart=document.createElement("div");
+
+heart.className="heart";
+
+heart.innerHTML="💖";
+
+heart.style.left=Math.random()*window.innerWidth+"px";
+
+heart.style.top=Math.random()*window.innerHeight+"px";
+
+heart.onclick=()=>{
+
+score++;
+
+document.getElementById("score").innerText=score;
+
+heart.remove();
+
+};
+
+document.body.appendChild(heart);
+
+}
+
 /* fireworks */
 
 const canvas=document.getElementById("fireworks");
-
 const ctx=canvas.getContext("2d");
 
 canvas.width=window.innerWidth;
-
 canvas.height=window.innerHeight;
 
 let particles=[];
@@ -249,15 +263,10 @@ for(let i=0;i<40;i++){
 particles.push({
 
 x:Math.random()*canvas.width,
-
 y:Math.random()*canvas.height/2,
-
 vx:(Math.random()-0.5)*6,
-
 vy:(Math.random()-0.5)*6,
-
 life:80,
-
 color:`hsl(${Math.random()*360},100%,60%)`
 
 });
@@ -294,44 +303,24 @@ requestAnimationFrame(draw);
 
 draw();
 
-/* music */
+/* stars */
 
-function playMusic(){
+setInterval(()=>{
 
-document.getElementById("music").src=
-"https://www.youtube.com/embed/IpFX2vq8HKw?autoplay=1";
+let star=document.createElement("div");
 
-}
+star.className="star";
 
-/* mini game */
+star.innerHTML="✨";
 
-let score=0;
+star.style.left=Math.random()*100+"vw";
+star.style.top=Math.random()*100+"vh";
 
-function startGame(){
+document.body.appendChild(star);
 
-let heart=document.createElement("div");
+setTimeout(()=>star.remove(),2000);
 
-heart.className="heart";
-
-heart.innerHTML="💖";
-
-heart.style.left=Math.random()*window.innerWidth+"px";
-
-heart.style.top=Math.random()*window.innerHeight+"px";
-
-heart.onclick=()=>{
-
-score++;
-
-document.getElementById("score").innerText=score;
-
-heart.remove();
-
-};
-
-document.body.appendChild(heart);
-
-}
+},200);
 
 </script>
 
