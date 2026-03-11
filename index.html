@@ -1,52 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-<title>Happy Birthday</title>
+<meta charset="UTF-8">
+<title>Happy Birthday คุณมีนา</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sriracha&family=Prompt:wght@300&display=swap" rel="stylesheet">
+
 <style>
+
 body{
-    background:#ffe6f0;
-    font-family:sans-serif;
-    text-align:center;
-    padding-top:100px;
+margin:0;
+height:100vh;
+background:linear-gradient(135deg,#ffd6ec,#ffe9f5);
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+font-family:'Prompt',sans-serif;
+overflow:hidden;
+}
+
+.container{
+z-index:2;
 }
 
 h1{
-    font-size:50px;
-    color:#ff4d88;
+font-family:'Sriracha',cursive;
+font-size:55px;
+color:#ff2d75;
+}
+
+h2{
+font-family:'Sriracha',cursive;
+font-size:38px;
+color:#ff4f9f;
 }
 
 p{
-    font-size:22px;
+font-size:20px;
+color:#555;
 }
+
 button{
-    padding:12px 20px;
-    font-size:18px;
-    background:#ff4d88;
-    color:white;
-    border:none;
-    border-radius:10px;
+padding:14px 28px;
+font-size:18px;
+border:none;
+border-radius:30px;
+background:#ff4f9f;
+color:white;
+cursor:pointer;
+margin-top:20px;
+transition:0.3s;
 }
+
+button:hover{
+transform:scale(1.1);
+background:#ff2d75;
+}
+
+.cake{
+font-size:100px;
+display:none;
+animation:bounce 1s infinite alternate;
+}
+
+@keyframes bounce{
+from{transform:translateY(0)}
+to{transform:translateY(-20px)}
+}
+
+.flower{
+position:absolute;
+top:-10px;
+font-size:24px;
+animation:fall linear infinite;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh);
+}
+}
+
+.gift{
+font-size:80px;
+cursor:pointer;
+}
+
+.message{
+display:none;
+font-size:22px;
+color:#ff2d75;
+margin-top:20px;
+font-family:'Sriracha',cursive;
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>🎂 Happy Birthday 🎂</h1>
+<div class="container">
 
-<p>
-สุขสันต์วันเกิดนะ  
-ขอบคุณที่เข้ามาในชีวิตเรา 🙂
-</p>
+<h1>Happy Birthday 🎂</h1>
+<h2>คุณมีนา</h2>
 
-<button onclick="showMessage()">กดตรงนี้สิ</button>
+<p>มีของขวัญเล็ก ๆ ให้คุณ</p>
 
-<p id="secret"></p>
+<div class="gift" onclick="openGift()">🎁</div>
+
+<div class="cake" id="cake">🎂</div>
+
+<div class="message" id="msg">
+สุขสันต์วันเกิดนะคุณมีนา 🌸  
+ขอให้ปีนี้เป็นปีที่ดีสำหรับคุณ  
+และมีรอยยิ้มเยอะ ๆ ในทุกวันนะ :)
+</div>
+
+<br>
+
+<button onclick="playMusic()">เปิดเพลง 🎵</button>
+
+</div>
+
+
+<!-- เพลง -->
+<iframe id="music"
+width="0"
+height="0"
+src=""
+frameborder="0"
+allow="autoplay">
+</iframe>
+
 
 <script>
-function showMessage(){
-document.getElementById("secret").innerHTML =
-"ขอให้ปีนี้เป็นปีที่ดีสำหรับเธอ และมีเราคอยอยู่ข้างๆนะ ❤️";
+
+function openGift(){
+document.getElementById("cake").style.display="block";
+document.getElementById("msg").style.display="block";
 }
+
+function playMusic(){
+
+document.getElementById("music").src =
+"https://www.youtube.com/embed/IpFX2vq8HKw?autoplay=1";
+
+}
+
+function createFlower(){
+
+const flower=document.createElement("div");
+
+flower.classList.add("flower");
+
+flower.innerHTML="🌸";
+
+flower.style.left=Math.random()*100+"vw";
+
+flower.style.animationDuration=(Math.random()*3+4)+"s";
+
+document.body.appendChild(flower);
+
+setTimeout(()=>{
+flower.remove();
+},7000);
+
+}
+
+setInterval(createFlower,400);
+
 </script>
 
 </body>
