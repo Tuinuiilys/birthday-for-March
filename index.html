@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>Happy Birthday คุณมีนา</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Sriracha&family=Prompt:wght@300;400&display=swap" rel="stylesheet">
@@ -13,41 +11,70 @@
 
 body{
 margin:0;
+overflow:hidden;
 background:linear-gradient(135deg,#ffd6ec,#ffeaf6);
 font-family:'Prompt',sans-serif;
 text-align:center;
-overflow:hidden;
 }
 
 h1{
 font-family:'Sriracha';
-font-size:52px;
+font-size:50px;
 color:#ff2d75;
 margin-top:30px;
 }
 
-.gallery img{
+.photo{
 width:200px;
 height:200px;
 border-radius:50%;
 object-fit:cover;
 border:6px solid white;
 box-shadow:0 10px 30px rgba(0,0,0,.2);
+display:none;
+position:relative;
+z-index:2;
 }
 
-button{
-padding:10px 20px;
-border:none;
-border-radius:25px;
-background:#ff4f9f;
-color:white;
-margin:6px;
+/* 3D gift */
+
+.scene{
+width:120px;
+height:120px;
+margin:30px auto;
+perspective:800px;
 cursor:pointer;
 }
 
+.box{
+width:100%;
+height:100%;
+position:relative;
+transform-style:preserve-3d;
+transition:1s;
+}
+
+.box.open{
+transform:rotateX(120deg);
+}
+
+.face{
+position:absolute;
+width:100%;
+height:100%;
+background:#ff4f9f;
+border:3px solid white;
+}
+
+.top{
+transform-origin:top;
+}
+
+/* cake */
+
 .cake{
 font-size:80px;
-margin-top:10px;
+display:none;
 }
 
 .candles span{
@@ -55,24 +82,41 @@ font-size:30px;
 margin:2px;
 }
 
+/* hearts */
+
 .heart{
 position:absolute;
 color:#ff4f9f;
 font-size:22px;
-animation:fly 2s forwards;
+animation:shoot 2s forwards;
 }
 
-@keyframes fly{
-0%{transform:scale(.5)}
+@keyframes shoot{
+0%{transform:scale(.5);opacity:1}
 100%{transform:translateY(-200px) scale(1.8);opacity:0}
 }
 
-canvas{
-position:fixed;
-top:0;
-left:0;
-pointer-events:none;
+/* envelope */
+
+.envelope{
+font-size:60px;
+cursor:pointer;
+margin-top:20px;
 }
+
+.letter{
+display:none;
+background:white;
+width:280px;
+margin:auto;
+padding:20px;
+border-radius:15px;
+box-shadow:0 10px 20px rgba(0,0,0,.2);
+font-family:'Sriracha';
+color:#ff2d75;
+}
+
+/* stars */
 
 .star{
 position:absolute;
@@ -82,89 +126,114 @@ animation:twinkle 2s infinite;
 }
 
 @keyframes twinkle{
-0%,100%{opacity:.3}
+0%,100%{opacity:.2}
 50%{opacity:1}
 }
 
-.confetti{
-position:absolute;
-width:6px;
-height:6px;
-animation:fall 3s linear forwards;
+canvas{
+position:fixed;
+top:0;
+left:0;
+pointer-events:none;
 }
 
-@keyframes fall{
-to{transform:translateY(500px) rotate(720deg)}
+button{
+padding:10px 20px;
+border:none;
+border-radius:25px;
+background:#ff4f9f;
+color:white;
+margin:5px;
+cursor:pointer;
 }
 
 </style>
-
 </head>
 
 <body>
 
+<canvas id="fireworks"></canvas>
+
 <h1>Happy Birthday 🎂</h1>
 <h2>คุณมีนา</h2>
 
-<div class="gallery">
-<img id="photo" src="meena1.jpg">
+<div class="scene" onclick="openGift()">
+<div class="box" id="box">
+<div class="face"></div>
+</div>
+</div>
+
+<img src="meena.jpg" id="photo" class="photo">
+
+<div class="cake" id="cake">
+🎂
+<div class="candles" id="candles"></div>
 </div>
 
 <br>
 
-<div class="cake">🎂</div>
-<div class="candles" id="candles"></div>
+<button onclick="blow()">เป่าเทียน</button>
+<button onclick="heartBurst()">ส่งหัวใจ</button>
+<button onclick="playMusic()">เปิดเพลง</button>
 
-<button onclick="blow()">🎤 เป่าเทียน</button>
-<button onclick="heartBurst()">💘 ส่งหัวใจ</button>
-<button onclick="openGift()">🎁 เปิดของขวัญ</button>
-<button onclick="playMusic()">🎵 เปิดเพลง</button>
-<button onclick="startGame()">🎮 Mini Game</button>
+<div class="envelope" onclick="openLetter()">💌</div>
 
-<div>Score: <span id="score">0</span></div>
+<div class="letter" id="letter">
+สุขสันต์วันเกิดนะคุณมีนา 🌸  
+ขอให้ปีนี้เป็นปีที่ดีสำหรับคุณ  
+มีรอยยิ้มเยอะ ๆ  
+และมีความสุขทุกวันนะ :)
+</div>
 
-<audio id="music">
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_5c7d4d2f6c.mp3?filename=birthday-party-112194.mp3">
-</audio>
-
-<canvas id="fireworks"></canvas>
+<iframe id="music" width="0" height="0"></iframe>
 
 <script>
 
-/* gallery */
+/* open gift */
 
-let images=["meena1.jpg","meena2.jpg","meena3.jpg"];
-let index=0;
+function openGift(){
 
-setInterval(()=>{
-index=(index+1)%images.length;
-document.getElementById("photo").src=images[index];
-},3000);
+document.getElementById("box").classList.add("open");
+
+document.getElementById("photo").style.display="block";
+
+document.getElementById("cake").style.display="block";
+
+createCandles();
+
+startFireworks();
+
+}
 
 /* candles */
 
-let candles=document.getElementById("candles");
+function createCandles(){
+
+let c=document.getElementById("candles");
 
 for(let i=0;i<6;i++){
+
 let s=document.createElement("span");
+
 s.innerHTML="🕯";
-candles.appendChild(s);
+
+c.appendChild(s);
+
 }
 
-/* blow candle */
+}
 
 function blow(){
-document.querySelectorAll("#candles span")
-.forEach(c=>c.innerHTML="💨");
+
+document.querySelectorAll("#candles span").forEach(c=>c.innerHTML="💨");
+
 }
 
-/* hearts */
+/* heart burst */
 
 function heartBurst(){
 
-let rect=document.getElementById("photo").getBoundingClientRect();
-
-for(let i=0;i<30;i++){
+for(let i=0;i<40;i++){
 
 let h=document.createElement("div");
 
@@ -172,9 +241,9 @@ h.className="heart";
 
 h.innerHTML="❤";
 
-h.style.left=rect.left+rect.width/2+"px";
+h.style.left=(window.innerWidth/2)+"px";
 
-h.style.top=rect.top+rect.height/2+"px";
+h.style.top="300px";
 
 document.body.appendChild(h);
 
@@ -183,125 +252,6 @@ setTimeout(()=>h.remove(),2000);
 }
 
 }
-
-/* confetti */
-
-function openGift(){
-
-for(let i=0;i<100;i++){
-
-let c=document.createElement("div");
-
-c.className="confetti";
-
-c.style.left=Math.random()*window.innerWidth+"px";
-
-c.style.background=`hsl(${Math.random()*360},80%,60%)`;
-
-document.body.appendChild(c);
-
-setTimeout(()=>c.remove(),3000);
-
-}
-
-startFireworks();
-
-}
-
-/* music */
-
-function playMusic(){
-document.getElementById("music").play();
-}
-
-/* mini game */
-
-let score=0;
-
-function startGame(){
-
-let heart=document.createElement("div");
-
-heart.className="heart";
-
-heart.innerHTML="💖";
-
-heart.style.left=Math.random()*window.innerWidth+"px";
-
-heart.style.top=Math.random()*window.innerHeight+"px";
-
-heart.onclick=()=>{
-
-score++;
-
-document.getElementById("score").innerText=score;
-
-heart.remove();
-
-};
-
-document.body.appendChild(heart);
-
-}
-
-/* fireworks */
-
-const canvas=document.getElementById("fireworks");
-const ctx=canvas.getContext("2d");
-
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-let particles=[];
-
-function startFireworks(){
-
-setInterval(()=>{
-
-for(let i=0;i<40;i++){
-
-particles.push({
-
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height/2,
-vx:(Math.random()-0.5)*6,
-vy:(Math.random()-0.5)*6,
-life:80,
-color:`hsl(${Math.random()*360},100%,60%)`
-
-});
-
-}
-
-},1000);
-
-}
-
-function draw(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-particles.forEach((p,i)=>{
-
-p.x+=p.vx;
-p.y+=p.vy;
-p.life--;
-
-ctx.fillStyle=p.color;
-
-ctx.beginPath();
-ctx.arc(p.x,p.y,3,0,Math.PI*2);
-ctx.fill();
-
-if(p.life<=0)particles.splice(i,1);
-
-});
-
-requestAnimationFrame(draw);
-
-}
-
-draw();
 
 /* stars */
 
@@ -314,6 +264,7 @@ star.className="star";
 star.innerHTML="✨";
 
 star.style.left=Math.random()*100+"vw";
+
 star.style.top=Math.random()*100+"vh";
 
 document.body.appendChild(star);
@@ -321,6 +272,91 @@ document.body.appendChild(star);
 setTimeout(()=>star.remove(),2000);
 
 },200);
+
+/* letter */
+
+function openLetter(){
+
+document.getElementById("letter").style.display="block";
+
+}
+
+/* music */
+
+function playMusic(){
+
+document.getElementById("music").src=
+"https://www.youtube.com/embed/IpFX2vq8HKw?autoplay=1";
+
+}
+
+/* fireworks */
+
+const canvas=document.getElementById("fireworks");
+
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+function startFireworks(){
+
+setInterval(()=>{
+
+for(let i=0;i<30;i++){
+
+particles.push({
+
+x:canvas.width/2,
+
+y:canvas.height/2,
+
+vx:(Math.random()-0.5)*6,
+
+vy:(Math.random()-0.5)*6,
+
+life:60
+
+});
+
+}
+
+},800);
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+particles.forEach((p,i)=>{
+
+p.x+=p.vx;
+
+p.y+=p.vy;
+
+p.life--;
+
+ctx.fillStyle="pink";
+
+ctx.beginPath();
+
+ctx.arc(p.x,p.y,3,0,Math.PI*2);
+
+ctx.fill();
+
+if(p.life<=0)particles.splice(i,1);
+
+});
+
+requestAnimationFrame(draw);
+
+}
+
+draw();
 
 </script>
 
