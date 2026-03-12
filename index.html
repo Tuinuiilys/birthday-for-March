@@ -5,29 +5,41 @@
 <meta charset="UTF-8">
 <title>Happy Birthday คุณมีนา</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Sriracha&family=Prompt:wght@300;400&family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Prompt:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 
 body{
 margin:0;
 height:100vh;
-background:linear-gradient(135deg,#ffd6ec,#ffeaf6);
 display:flex;
 justify-content:center;
 align-items:center;
 text-align:center;
 font-family:'Prompt',sans-serif;
 overflow:hidden;
+
+/* พื้นหลัง gradient เคลื่อนไหว */
+
+background:linear-gradient(-45deg,#ffd6ec,#ffeaf6,#ffc2de,#ffe0f2);
+background-size:400% 400%;
+animation:bgmove 10s infinite linear;
+}
+
+@keyframes bgmove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
 /* กล่องหลัก */
 
 .container{
-animation:fadeIn 1.5s ease;
+z-index:2;
+animation:fade 1.5s;
 }
 
-@keyframes fadeIn{
+@keyframes fade{
 from{opacity:0;transform:translateY(20px)}
 to{opacity:1}
 }
@@ -35,19 +47,19 @@ to{opacity:1}
 /* รูป */
 
 .photo{
-width:260px;
-height:260px;
+width:280px;
+height:280px;
 border-radius:50%;
 object-fit:cover;
 border:8px solid white;
-box-shadow:0 15px 40px rgba(0,0,0,0.25);
-margin-bottom:25px;
+box-shadow:0 0 30px rgba(255,0,120,.5);
+margin-bottom:20px;
 animation:float 4s ease-in-out infinite;
 }
 
 @keyframes float{
 0%,100%{transform:translateY(0)}
-50%{transform:translateY(-12px)}
+50%{transform:translateY(-15px)}
 }
 
 /* หัวข้อ */
@@ -56,14 +68,11 @@ animation:float 4s ease-in-out infinite;
 font-family:'Pacifico';
 font-size:60px;
 color:#ff2d75;
-margin-bottom:0;
 }
 
 .subtitle{
-font-family:'Sriracha';
-font-size:38px;
+font-size:36px;
 color:#ff4f9f;
-margin-top:5px;
 }
 
 /* เค้ก */
@@ -90,7 +99,6 @@ color:white;
 cursor:pointer;
 margin:10px;
 transition:.3s;
-box-shadow:0 5px 15px rgba(0,0,0,.2);
 }
 
 button:hover{
@@ -98,7 +106,7 @@ background:#ff2d75;
 transform:scale(1.1);
 }
 
-/* popup */
+/* popup เต็มจอ */
 
 .popup{
 position:fixed;
@@ -106,7 +114,7 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.4);
+background:rgba(0,0,0,0.6);
 display:flex;
 justify-content:center;
 align-items:center;
@@ -120,13 +128,13 @@ visibility:visible;
 opacity:1;
 }
 
-.popup-box{
+.popup-content{
 background:white;
-padding:30px;
+padding:40px;
 border-radius:20px;
-width:320px;
+width:400px;
 text-align:center;
-box-shadow:0 15px 40px rgba(0,0,0,.3);
+box-shadow:0 20px 40px rgba(0,0,0,.4);
 animation:pop .4s;
 }
 
@@ -135,9 +143,18 @@ from{transform:scale(.6)}
 to{transform:scale(1)}
 }
 
-.popup-box h3{
-font-family:'Sriracha';
+.popup-content h2{
+font-family:'Pacifico';
 color:#ff2d75;
+}
+
+.popup-content p{
+color:#555;
+font-size:18px;
+}
+
+.backbtn{
+margin-top:20px;
 }
 
 /* hearts */
@@ -145,11 +162,11 @@ color:#ff2d75;
 .heart{
 position:absolute;
 color:#ff4f9f;
-font-size:20px;
-animation:floatHeart 6s linear infinite;
+font-size:22px;
+animation:heartFloat 6s linear infinite;
 }
 
-@keyframes floatHeart{
+@keyframes heartFloat{
 0%{transform:translateY(100vh);opacity:0}
 100%{transform:translateY(-10vh);opacity:1}
 }
@@ -159,7 +176,7 @@ animation:floatHeart 6s linear infinite;
 .star{
 position:absolute;
 color:gold;
-font-size:18px;
+font-size:20px;
 animation:twinkle 2s infinite;
 }
 
@@ -196,22 +213,24 @@ animation:twinkle 2s infinite;
 
 <div class="popup" id="popup">
 
-<div class="popup-box">
+<div class="popup-content">
 
-<h3>ถึงคุณมีนา 💖</h3>
+<h2>ถึงคุณมีนา 💖</h2>
 
 <p>
 
 สุขสันต์วันเกิดนะ 🎂  
-ขอให้ปีนี้เป็นปีที่ดีสำหรับคุณ  
-มีรอยยิ้มเยอะ ๆ  
-มีความสุขมาก ๆ  
+วันนี้เป็นวันพิเศษของคุณ  
+
+เราขอให้ปีนี้เป็นปีที่ดี  
+มีรอยยิ้ม มีความสุข  
+และมีเรื่องดี ๆ เข้ามาเยอะ ๆ  
 
 ขอบคุณที่เข้ามาในชีวิตเรานะ :)
 
 </p>
 
-<button onclick="closePopup()">ปิด</button>
+<button class="backbtn" onclick="closePopup()">กลับหน้าหลัก</button>
 
 </div>
 
@@ -241,11 +260,14 @@ document.getElementById("music").src="https://www.youtube.com/embed/IpFX2vq8HKw?
 
 function createHeart(){
 
-const heart=document.createElement("div");
-heart.classList.add("heart");
+let heart=document.createElement("div");
+
+heart.className="heart";
+
 heart.innerHTML="❤";
 
 heart.style.left=Math.random()*100+"vw";
+
 heart.style.fontSize=(Math.random()*20+20)+"px";
 
 document.body.appendChild(heart);
@@ -260,11 +282,14 @@ setInterval(createHeart,400);
 
 function createStar(){
 
-const star=document.createElement("div");
-star.classList.add("star");
+let star=document.createElement("div");
+
+star.className="star";
+
 star.innerHTML="✨";
 
 star.style.left=Math.random()*100+"vw";
+
 star.style.top=Math.random()*100+"vh";
 
 document.body.appendChild(star);
