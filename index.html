@@ -1,306 +1,425 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 <title>Happy Birthday คุณมีนา</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Prompt:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Sriracha&family=Prompt:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
+:root{
+  --pink:#ff4f9f;
+  --pink2:#ff2d75;
+  --bg1:#ffd6ec;
+  --bg2:#ffeaf6;
+}
+
+*{box-sizing:border-box}
 
 body{
-margin:0;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-text-align:center;
-font-family:'Prompt',sans-serif;
-overflow:hidden;
+  margin:0;
+  height:100vh;
+  overflow:hidden;
+  font-family:'Prompt',sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
 
-/* พื้นหลัง gradient เคลื่อนไหว */
-
-background:linear-gradient(-45deg,#ffd6ec,#ffeaf6,#ffc2de,#ffe0f2);
-background-size:400% 400%;
-animation:bgmove 10s infinite linear;
+  background:linear-gradient(-45deg,#ffd6ec,#ffeaf6,#ffc2de,#ffe0f2);
+  background-size:400% 400%;
+  animation:bgmove 12s infinite linear;
 }
 
 @keyframes bgmove{
-0%{background-position:0% 50%}
-50%{background-position:100% 50%}
-100%{background-position:0% 50%}
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
 }
 
-/* กล่องหลัก */
-
-.container{
-z-index:2;
-animation:fade 1.5s;
+/* canvas layers */
+canvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
 }
 
-@keyframes fade{
-from{opacity:0;transform:translateY(20px)}
-to{opacity:1}
+/* welcome screen */
+#welcome{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
 }
 
-/* รูป */
-
-.photo{
-width:280px;
-height:280px;
-border-radius:50%;
-object-fit:cover;
-border:8px solid white;
-box-shadow:0 0 30px rgba(255,0,120,.5);
-margin-bottom:20px;
-animation:float 4s ease-in-out infinite;
-}
-
-@keyframes float{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-15px)}
-}
-
-/* หัวข้อ */
-
-.title{
-font-family:'Pacifico';
-font-size:60px;
-color:#ff2d75;
-}
-
-.subtitle{
-font-size:36px;
-color:#ff4f9f;
-}
-
-/* เค้ก */
-
-.cake{
-font-size:110px;
-animation:bounce 1.2s infinite alternate;
-}
-
-@keyframes bounce{
-from{transform:translateY(0)}
-to{transform:translateY(-18px)}
-}
-
-/* ปุ่ม */
-
-button{
-padding:12px 30px;
-font-size:18px;
-border:none;
-border-radius:30px;
-background:#ff4f9f;
-color:white;
-cursor:pointer;
-margin:10px;
-transition:.3s;
-}
-
-button:hover{
-background:#ff2d75;
-transform:scale(1.1);
-}
-
-/* popup เต็มจอ */
-
-.popup{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.6);
-display:flex;
-justify-content:center;
-align-items:center;
-visibility:hidden;
-opacity:0;
-transition:.4s;
-}
-
-.popup.active{
-visibility:visible;
-opacity:1;
-}
-
-.popup-content{
-background:white;
-padding:40px;
-border-radius:20px;
-width:400px;
-text-align:center;
-box-shadow:0 20px 40px rgba(0,0,0,.4);
-animation:pop .4s;
+.wbox{
+  background:white;
+  padding:40px;
+  border-radius:20px;
+  width:320px;
+  animation:pop .5s;
 }
 
 @keyframes pop{
-from{transform:scale(.6)}
-to{transform:scale(1)}
+  from{transform:scale(.7);opacity:0}
+  to{transform:scale(1)}
 }
 
-.popup-content h2{
-font-family:'Pacifico';
-color:#ff2d75;
+.enter{
+  margin-top:15px;
 }
 
-.popup-content p{
-color:#555;
-font-size:18px;
+/* main container */
+.container{
+  z-index:2;
+  display:none;
+  animation:fadeIn 1s;
 }
 
-.backbtn{
-margin-top:20px;
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1}
 }
 
-/* hearts */
+/* photo */
+.photo{
+  width:280px;
+  height:280px;
+  border-radius:50%;
+  object-fit:cover;
+  border:8px solid white;
+  box-shadow:0 0 40px rgba(255,0,120,.6);
+  margin-bottom:20px;
+  animation:float 4s ease-in-out infinite;
+  cursor:pointer;
+}
 
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-12px)}
+}
+
+/* title */
+.title{
+  font-family:'Pacifico';
+  font-size:60px;
+  color:var(--pink2);
+  margin-bottom:0;
+}
+
+.subtitle{
+  font-family:'Sriracha';
+  font-size:36px;
+  color:var(--pink);
+}
+
+/* cake */
+.cake{
+  font-size:110px;
+  animation:bounce 1.2s infinite alternate;
+}
+
+@keyframes bounce{
+  from{transform:translateY(0)}
+  to{transform:translateY(-18px)}
+}
+
+/* buttons */
+button{
+  padding:12px 30px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  background:var(--pink);
+  color:white;
+  cursor:pointer;
+  margin:8px;
+  transition:.3s;
+}
+
+button:hover{
+  background:var(--pink2);
+  transform:scale(1.08);
+}
+
+/* popup */
+.popup{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  visibility:hidden;
+  opacity:0;
+  transition:.4s;
+  z-index:20;
+}
+
+.popup.active{
+  visibility:visible;
+  opacity:1;
+}
+
+.popup-box{
+  background:white;
+  padding:40px;
+  border-radius:20px;
+  width:420px;
+  animation:pop .4s;
+}
+
+.popup-box h2{
+  font-family:'Pacifico';
+  color:var(--pink2);
+}
+
+/* mini game hearts */
+.gheart{
+  position:absolute;
+  font-size:28px;
+  cursor:pointer;
+  user-select:none;
+}
+
+/* floating hearts */
 .heart{
-position:absolute;
-color:#ff4f9f;
-font-size:22px;
-animation:heartFloat 6s linear infinite;
+  position:absolute;
+  color:var(--pink);
+  animation:heartFloat 6s linear infinite;
 }
 
 @keyframes heartFloat{
-0%{transform:translateY(100vh);opacity:0}
-100%{transform:translateY(-10vh);opacity:1}
+  0%{transform:translateY(100vh);opacity:0}
+  100%{transform:translateY(-10vh);opacity:1}
 }
-
-/* stars */
-
-.star{
-position:absolute;
-color:gold;
-font-size:20px;
-animation:twinkle 2s infinite;
-}
-
-@keyframes twinkle{
-0%,100%{opacity:.3}
-50%{opacity:1}
-}
-
 </style>
-
 </head>
 
 <body>
 
-<div class="container">
+<!-- background layers -->
+<canvas id="stars"></canvas>
+<canvas id="bubbles"></canvas>
+<canvas id="fireworks"></canvas>
 
-<img class="photo" src="meena1.jpg">
+<!-- welcome -->
+<div id="welcome">
+  <div class="wbox">
+    <h2 style="font-family:Pacifico;color:#ff2d75">A small surprise ✨</h2>
+    <p>สำหรับคุณมีนา</p>
+    <button class="enter" onclick="enterSite()">เปิดเซอร์ไพรส์</button>
+  </div>
+</div>
+
+<!-- main -->
+<div class="container" id="main">
+
+<img src="meena1.jpg" class="photo" onclick="photoHearts()">
 
 <h1 class="title">Happy Birthday 🎂</h1>
-
 <h2 class="subtitle">คุณมีนา</h2>
 
 <div class="cake">🎂</div>
 
 <p>ลองเป่าเทียนดูสิ</p>
 
-<button onclick="openPopup()">เปิดจดหมาย 💌</button>
+<button onclick="micBlow()">🎤 เป่าเทียน</button>
+<button onclick="openPopup()">💌 เปิดจดหมาย</button>
+<button onclick="playMusic()">🎵 เปิดเพลง</button>
+<button onclick="confetti()">🎊 โปรยกระดาษ</button>
+<button onclick="spawnGame()">🎮 Mini Game</button>
 
-<button onclick="playMusic()">เปิดเพลง 🎵</button>
+<div>Score: <span id="score">0</span></div>
 
 </div>
 
-<!-- popup -->
-
+<!-- popup letter -->
 <div class="popup" id="popup">
-
-<div class="popup-content">
-
-<h2>ถึงคุณมีนา 💖</h2>
-
-<p>
-
-สุขสันต์วันเกิดนะ 🎂  
-วันนี้เป็นวันพิเศษของคุณ  
-
-เราขอให้ปีนี้เป็นปีที่ดี  
-มีรอยยิ้ม มีความสุข  
-และมีเรื่องดี ๆ เข้ามาเยอะ ๆ  
-
-ขอบคุณที่เข้ามาในชีวิตเรานะ :)
-
-</p>
-
-<button class="backbtn" onclick="closePopup()">กลับหน้าหลัก</button>
-
-</div>
-
+  <div class="popup-box">
+    <h2>ถึงคุณมีนา 💖</h2>
+    <p>
+    สุขสันต์วันเกิดนะ 🎂<br><br>
+    ขอให้ปีนี้มีแต่รอยยิ้ม<br>
+    มีความสุข และมีเรื่องดี ๆ เข้ามาเยอะ ๆ<br><br>
+    ขอบคุณที่เข้ามาในชีวิตเรานะ :)
+    </p>
+    <button onclick="closePopup()">กลับหน้าหลัก</button>
+  </div>
 </div>
 
 <iframe id="music" width="0" height="0" allow="autoplay"></iframe>
 
 <script>
 
+/* enter site */
+function enterSite(){
+  document.getElementById("welcome").style.display="none";
+  document.getElementById("main").style.display="block";
+}
+
 /* popup */
-
 function openPopup(){
-document.getElementById("popup").classList.add("active");
+  document.getElementById("popup").classList.add("active");
+  launchFireworks();
 }
-
 function closePopup(){
-document.getElementById("popup").classList.remove("active");
+  document.getElementById("popup").classList.remove("active");
 }
 
-/* เพลง */
-
+/* music */
 function playMusic(){
-document.getElementById("music").src="https://www.youtube.com/embed/IpFX2vq8HKw?autoplay=1";
+  document.getElementById("music").src="https://www.youtube.com/embed/IpFX2vq8HKw?autoplay=1";
 }
 
-/* hearts */
+/* floating hearts */
+setInterval(()=>{
+  const h=document.createElement("div");
+  h.className="heart";
+  h.innerHTML="❤";
+  h.style.left=Math.random()*100+"vw";
+  h.style.fontSize=(Math.random()*25+18)+"px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},500);
 
-function createHeart(){
-
-let heart=document.createElement("div");
-
-heart.className="heart";
-
-heart.innerHTML="❤";
-
-heart.style.left=Math.random()*100+"vw";
-
-heart.style.fontSize=(Math.random()*20+20)+"px";
-
-document.body.appendChild(heart);
-
-setTimeout(()=>heart.remove(),6000);
-
+/* hearts from photo */
+function photoHearts(){
+  let rect=document.querySelector(".photo").getBoundingClientRect();
+  for(let i=0;i<25;i++){
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="💖";
+    h.style.left=(rect.left+rect.width/2)+"px";
+    h.style.top=(rect.top+rect.height/2)+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),4000);
+  }
 }
 
-setInterval(createHeart,400);
-
-/* stars */
-
-function createStar(){
-
-let star=document.createElement("div");
-
-star.className="star";
-
-star.innerHTML="✨";
-
-star.style.left=Math.random()*100+"vw";
-
-star.style.top=Math.random()*100+"vh";
-
-document.body.appendChild(star);
-
-setTimeout(()=>star.remove(),2000);
-
+/* confetti */
+function confetti(){
+  for(let i=0;i<120;i++){
+    let c=document.createElement("div");
+    c.style.position="absolute";
+    c.style.width="6px";
+    c.style.height="6px";
+    c.style.left=Math.random()*window.innerWidth+"px";
+    c.style.top="-10px";
+    c.style.background=`hsl(${Math.random()*360},80%,60%)`;
+    c.style.animation="fall 3s linear";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
+  }
 }
 
-setInterval(createStar,300);
+/* mini game */
+let score=0;
+function spawnGame(){
+  let h=document.createElement("div");
+  h.className="gheart";
+  h.innerHTML="💖";
+  h.style.left=Math.random()*window.innerWidth+"px";
+  h.style.top=Math.random()*window.innerHeight+"px";
+  h.onclick=()=>{
+    score++;
+    document.getElementById("score").innerText=score;
+    h.remove();
+  }
+  document.body.appendChild(h);
+}
+
+/* stars background */
+const starCanvas=document.getElementById("stars");
+const sctx=starCanvas.getContext("2d");
+starCanvas.width=window.innerWidth;
+starCanvas.height=window.innerHeight;
+
+let stars=[];
+for(let i=0;i<100;i++){
+  stars.push({x:Math.random()*starCanvas.width,y:Math.random()*starCanvas.height,r:Math.random()*2});
+}
+
+function drawStars(){
+  sctx.clearRect(0,0,starCanvas.width,starCanvas.height);
+  stars.forEach(s=>{
+    sctx.fillStyle="gold";
+    sctx.beginPath();
+    sctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    sctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+/* fireworks */
+const fw=document.getElementById("fireworks");
+const fctx=fw.getContext("2d");
+fw.width=window.innerWidth;
+fw.height=window.innerHeight;
+
+let particles=[];
+function launchFireworks(){
+  for(let i=0;i<60;i++){
+    particles.push({
+      x:fw.width/2,
+      y:fw.height/2,
+      vx:(Math.random()-0.5)*6,
+      vy:(Math.random()-0.5)*6,
+      life:80,
+      color:`hsl(${Math.random()*360},100%,60%)`
+    });
+  }
+}
+
+function drawFireworks(){
+  fctx.clearRect(0,0,fw.width,fw.height);
+  particles.forEach((p,i)=>{
+    p.x+=p.vx;
+    p.y+=p.vy;
+    p.life--;
+    fctx.fillStyle=p.color;
+    fctx.beginPath();
+    fctx.arc(p.x,p.y,3,0,Math.PI*2);
+    fctx.fill();
+    if(p.life<=0)particles.splice(i,1);
+  });
+  requestAnimationFrame(drawFireworks);
+}
+drawFireworks();
+
+/* mic blow */
+function micBlow(){
+  navigator.mediaDevices.getUserMedia({audio:true})
+  .then(stream=>{
+    const ctx=new AudioContext();
+    const mic=ctx.createMediaStreamSource(stream);
+    const analyser=ctx.createAnalyser();
+    mic.connect(analyser);
+    const data=new Uint8Array(analyser.frequencyBinCount);
+    function detect(){
+      analyser.getByteFrequencyData(data);
+      let volume=data.reduce((a,b)=>a+b)/data.length;
+      if(volume>90){
+        launchFireworks();
+      }
+      requestAnimationFrame(detect);
+    }
+    detect();
+  });
+}
 
 </script>
+
+<style>
+@keyframes fall{
+  to{transform:translateY(600px) rotate(720deg)}
+}
+</style>
 
 </body>
 </html>
