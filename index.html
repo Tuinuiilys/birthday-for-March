@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <title>Happy Birthday คุณมีนา</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Sriracha&family=Prompt:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sriracha&family=Prompt:wght@300;400&family=Pacifico&display=swap" rel="stylesheet">
 
 <style>
 
@@ -24,8 +24,7 @@ overflow:hidden;
 /* กล่องหลัก */
 
 .container{
-z-index:2;
-animation:fadeIn 2s;
+animation:fadeIn 1.5s ease;
 }
 
 @keyframes fadeIn{
@@ -33,44 +32,56 @@ from{opacity:0;transform:translateY(20px)}
 to{opacity:1}
 }
 
-/* หัวข้อ */
-
-h1{
-font-family:'Sriracha';
-font-size:55px;
-color:#ff2d75;
-margin-bottom:0;
-}
-
-h2{
-font-family:'Sriracha';
-font-size:38px;
-color:#ff4f9f;
-margin-top:0;
-}
-
 /* รูป */
 
 .photo{
-width:200px;
-height:200px;
+width:260px;
+height:260px;
 border-radius:50%;
 object-fit:cover;
-border:6px solid white;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
-margin-bottom:20px;
+border:8px solid white;
+box-shadow:0 15px 40px rgba(0,0,0,0.25);
+margin-bottom:25px;
 animation:float 4s ease-in-out infinite;
 }
 
 @keyframes float{
 0%,100%{transform:translateY(0)}
-50%{transform:translateY(-10px)}
+50%{transform:translateY(-12px)}
+}
+
+/* หัวข้อ */
+
+.title{
+font-family:'Pacifico';
+font-size:60px;
+color:#ff2d75;
+margin-bottom:0;
+}
+
+.subtitle{
+font-family:'Sriracha';
+font-size:38px;
+color:#ff4f9f;
+margin-top:5px;
+}
+
+/* เค้ก */
+
+.cake{
+font-size:110px;
+animation:bounce 1.2s infinite alternate;
+}
+
+@keyframes bounce{
+from{transform:translateY(0)}
+to{transform:translateY(-18px)}
 }
 
 /* ปุ่ม */
 
 button{
-padding:12px 25px;
+padding:12px 30px;
 font-size:18px;
 border:none;
 border-radius:30px;
@@ -79,6 +90,7 @@ color:white;
 cursor:pointer;
 margin:10px;
 transition:.3s;
+box-shadow:0 5px 15px rgba(0,0,0,.2);
 }
 
 button:hover{
@@ -86,46 +98,49 @@ background:#ff2d75;
 transform:scale(1.1);
 }
 
-/* เค้ก */
+/* popup */
 
-.cake{
-font-size:100px;
-animation:bounce 1.2s infinite alternate;
+.popup{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.4);
+display:flex;
+justify-content:center;
+align-items:center;
+visibility:hidden;
+opacity:0;
+transition:.4s;
 }
 
-@keyframes bounce{
-from{transform:translateY(0)}
-to{transform:translateY(-15px)}
+.popup.active{
+visibility:visible;
+opacity:1;
 }
 
-/* เทียน */
-
-.candle{
-font-size:40px;
-cursor:pointer;
-}
-
-/* จดหมาย */
-
-.letter{
-display:none;
+.popup-box{
 background:white;
-padding:20px;
-border-radius:15px;
-width:280px;
-margin:20px auto;
-box-shadow:0 10px 20px rgba(0,0,0,0.2);
-font-family:'Sriracha';
-color:#ff2d75;
-animation:popup .5s;
+padding:30px;
+border-radius:20px;
+width:320px;
+text-align:center;
+box-shadow:0 15px 40px rgba(0,0,0,.3);
+animation:pop .4s;
 }
 
-@keyframes popup{
-from{transform:scale(.6);opacity:0}
+@keyframes pop{
+from{transform:scale(.6)}
 to{transform:scale(1)}
 }
 
-/* หัวใจ */
+.popup-box h3{
+font-family:'Sriracha';
+color:#ff2d75;
+}
+
+/* hearts */
 
 .heart{
 position:absolute;
@@ -139,7 +154,7 @@ animation:floatHeart 6s linear infinite;
 100%{transform:translateY(-10vh);opacity:1}
 }
 
-/* ดาว */
+/* stars */
 
 .star{
 position:absolute;
@@ -149,7 +164,7 @@ animation:twinkle 2s infinite;
 }
 
 @keyframes twinkle{
-0%,100%{opacity:.2}
+0%,100%{opacity:.3}
 50%{opacity:1}
 }
 
@@ -163,26 +178,40 @@ animation:twinkle 2s infinite;
 
 <img class="photo" src="meena1.jpg">
 
-<h1>Happy Birthday 🎂</h1>
-<h2>คุณมีนา</h2>
+<h1 class="title">Happy Birthday 🎂</h1>
+
+<h2 class="subtitle">คุณมีนา</h2>
 
 <div class="cake">🎂</div>
 
-<div class="candle" onclick="blowCandle()">🕯</div>
-
 <p>ลองเป่าเทียนดูสิ</p>
 
-<button onclick="openLetter()">เปิดจดหมาย 💌</button>
+<button onclick="openPopup()">เปิดจดหมาย 💌</button>
 
 <button onclick="playMusic()">เปิดเพลง 🎵</button>
 
-<div class="letter" id="letter">
+</div>
 
-สุขสันต์วันเกิดนะคุณมีนา 🌸  
+<!-- popup -->
+
+<div class="popup" id="popup">
+
+<div class="popup-box">
+
+<h3>ถึงคุณมีนา 💖</h3>
+
+<p>
+
+สุขสันต์วันเกิดนะ 🎂  
 ขอให้ปีนี้เป็นปีที่ดีสำหรับคุณ  
-มีรอยยิ้มเยอะ ๆ มีความสุขมาก ๆ  
+มีรอยยิ้มเยอะ ๆ  
+มีความสุขมาก ๆ  
 
 ขอบคุณที่เข้ามาในชีวิตเรานะ :)
+
+</p>
+
+<button onclick="closePopup()">ปิด</button>
 
 </div>
 
@@ -192,16 +221,14 @@ animation:twinkle 2s infinite;
 
 <script>
 
-/* เป่าเทียน */
+/* popup */
 
-function blowCandle(){
-document.querySelector(".candle").innerHTML="💨";
+function openPopup(){
+document.getElementById("popup").classList.add("active");
 }
 
-/* เปิดจดหมาย */
-
-function openLetter(){
-document.getElementById("letter").style.display="block";
+function closePopup(){
+document.getElementById("popup").classList.remove("active");
 }
 
 /* เพลง */
@@ -210,7 +237,7 @@ function playMusic(){
 document.getElementById("music").src="https://www.youtube.com/embed/IpFX2vq8HKw?autoplay=1";
 }
 
-/* หัวใจลอย */
+/* hearts */
 
 function createHeart(){
 
@@ -229,7 +256,7 @@ setTimeout(()=>heart.remove(),6000);
 
 setInterval(createHeart,400);
 
-/* ดาว */
+/* stars */
 
 function createStar(){
 
