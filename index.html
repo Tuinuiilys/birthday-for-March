@@ -28,16 +28,12 @@ animation:bgmove 10s infinite linear;
 100%{background-position:0% 50%}
 }
 
-/* container */
-
 .container{
 max-width:900px;
 width:90%;
 margin:auto;
 padding-top:60px;
 }
-
-/* photo */
 
 .photo{
 width:260px;
@@ -54,8 +50,6 @@ animation:float 4s ease-in-out infinite;
 50%{transform:translateY(-12px)}
 }
 
-/* titles */
-
 .title{
 font-family:'Pacifico';
 font-size:60px;
@@ -68,8 +62,6 @@ font-size:36px;
 color:#ff4f9f;
 }
 
-/* cake */
-
 .cake{
 font-size:100px;
 animation:bounce 1s infinite alternate;
@@ -80,7 +72,10 @@ from{transform:translateY(0)}
 to{transform:translateY(-15px)}
 }
 
-/* buttons */
+.candle{
+font-size:40px;
+margin-top:10px;
+}
 
 button{
 padding:12px 28px;
@@ -98,8 +93,6 @@ button:hover{
 background:#ff2d75;
 transform:scale(1.1);
 }
-
-/* popup */
 
 .popup{
 position:fixed;
@@ -140,8 +133,6 @@ font-family:'Pacifico';
 color:#ff2d75;
 }
 
-/* floating hearts */
-
 .heart{
 position:absolute;
 color:#ff4f9f;
@@ -152,8 +143,6 @@ animation:floatHeart 6s linear infinite;
 0%{transform:translateY(100vh);opacity:0}
 100%{transform:translateY(-10vh);opacity:1}
 }
-
-/* responsive */
 
 @media (max-width:768px){
 
@@ -174,10 +163,6 @@ font-size:26px;
 font-size:80px;
 }
 
-button{
-font-size:16px;
-}
-
 }
 
 </style>
@@ -196,15 +181,17 @@ font-size:16px;
 
 <div class="cake">🎂</div>
 
+<div class="candle" id="candle">🕯🕯🕯</div>
+
 <p>ลองเป่าเทียนดูสิ</p>
+
+<button onclick="blowCandle()">🎤 เป่าเทียน</button>
 
 <button onclick="openPopup()">เปิดจดหมาย 💌</button>
 
 <button onclick="playMusic()">เปิดเพลง 🎵</button>
 
 </div>
-
-<!-- popup -->
 
 <div class="popup" id="popup">
 
@@ -216,9 +203,9 @@ font-size:16px;
 
 สุขสันต์วันเกิดนะ 🎂<br><br>
 
-ขอให้ปีนี้มีแต่รอยยิ้ม<br>
-มีความสุขมาก ๆ<br>
-และมีเรื่องดี ๆ เข้ามาเยอะ ๆ<br><br>
+ขอให้ปีนี้มีแต่รอยยิ้ม  
+มีความสุขมาก ๆ  
+และมีเรื่องดี ๆ เข้ามาเยอะ ๆ  
 
 ขอบคุณที่เข้ามาในชีวิตเรานะ :)
 
@@ -271,6 +258,44 @@ setTimeout(()=>heart.remove(),6000);
 }
 
 setInterval(createHeart,500);
+
+/* blow candle */
+
+function blowCandle(){
+
+navigator.mediaDevices.getUserMedia({audio:true})
+
+.then(stream=>{
+
+const audioContext=new AudioContext();
+const mic=audioContext.createMediaStreamSource(stream);
+const analyser=audioContext.createAnalyser();
+
+mic.connect(analyser);
+
+const data=new Uint8Array(analyser.frequencyBinCount);
+
+function detect(){
+
+analyser.getByteFrequencyData(data);
+
+let volume=data.reduce((a,b)=>a+b)/data.length;
+
+if(volume>80){
+
+document.getElementById("candle").innerHTML="💨";
+
+}
+
+requestAnimationFrame(detect);
+
+}
+
+detect();
+
+});
+
+}
 
 </script>
 
