@@ -16,6 +16,10 @@ margin:0;
 font-family:'Prompt',sans-serif;
 text-align:center;
 overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
 
 background:linear-gradient(-45deg,#ffd6ec,#ffeaf6,#ffc2de,#ffe0f2);
 background-size:400% 400%;
@@ -28,12 +32,14 @@ animation:bgmove 10s infinite linear;
 100%{background-position:0% 50%}
 }
 
+/* container */
+
 .container{
 max-width:900px;
 width:90%;
-margin:auto;
-padding-top:60px;
 }
+
+/* photo */
 
 .photo{
 width:260px;
@@ -41,7 +47,7 @@ height:260px;
 border-radius:50%;
 object-fit:cover;
 border:8px solid white;
-box-shadow:0 0 30px rgba(255,0,120,.5);
+box-shadow:0 0 40px rgba(255,0,120,.6);
 animation:float 4s ease-in-out infinite;
 }
 
@@ -49,6 +55,8 @@ animation:float 4s ease-in-out infinite;
 0%,100%{transform:translateY(0)}
 50%{transform:translateY(-12px)}
 }
+
+/* titles */
 
 .title{
 font-family:'Pacifico';
@@ -62,6 +70,8 @@ font-size:36px;
 color:#ff4f9f;
 }
 
+/* cake */
+
 .cake{
 font-size:100px;
 animation:bounce 1s infinite alternate;
@@ -73,9 +83,10 @@ to{transform:translateY(-15px)}
 }
 
 .candle{
-font-size:40px;
-margin-top:10px;
+font-size:35px;
 }
+
+/* buttons */
 
 button{
 padding:12px 28px;
@@ -85,7 +96,7 @@ border-radius:30px;
 background:#ff4f9f;
 color:white;
 cursor:pointer;
-margin:10px;
+margin:8px;
 transition:.3s;
 }
 
@@ -93,6 +104,8 @@ button:hover{
 background:#ff2d75;
 transform:scale(1.1);
 }
+
+/* popup */
 
 .popup{
 position:fixed;
@@ -133,6 +146,8 @@ font-family:'Pacifico';
 color:#ff2d75;
 }
 
+/* floating hearts */
+
 .heart{
 position:absolute;
 color:#ff4f9f;
@@ -144,23 +159,61 @@ animation:floatHeart 6s linear infinite;
 100%{transform:translateY(-10vh);opacity:1}
 }
 
-@media (max-width:768px){
+/* fireworks */
+
+.firework{
+position:absolute;
+font-size:30px;
+animation:boom 1s ease-out forwards;
+}
+
+@keyframes boom{
+0%{transform:scale(.3);opacity:1}
+100%{transform:scale(3);opacity:0}
+}
+
+/* tablet */
+
+@media (max-width:1024px){
 
 .photo{
-width:180px;
-height:180px;
+width:220px;
+height:220px;
 }
 
 .title{
-font-size:42px;
+font-size:48px;
 }
 
 .subtitle{
-font-size:26px;
+font-size:30px;
+}
+
+}
+
+/* mobile */
+
+@media (max-width:600px){
+
+.photo{
+width:160px;
+height:160px;
+}
+
+.title{
+font-size:36px;
+}
+
+.subtitle{
+font-size:22px;
 }
 
 .cake{
-font-size:80px;
+font-size:70px;
+}
+
+button{
+font-size:15px;
 }
 
 }
@@ -181,17 +234,19 @@ font-size:80px;
 
 <div class="cake">🎂</div>
 
-<div class="candle" id="candle">🕯🕯🕯</div>
+<div id="candle" class="candle">🕯🕯🕯</div>
 
 <p>ลองเป่าเทียนดูสิ</p>
 
 <button onclick="blowCandle()">🎤 เป่าเทียน</button>
 
-<button onclick="openPopup()">เปิดจดหมาย 💌</button>
+<button onclick="openPopup()">💌 เปิดจดหมาย</button>
 
-<button onclick="playMusic()">เปิดเพลง 🎵</button>
+<button onclick="playMusic()">🎵 เปิดเพลง</button>
 
 </div>
+
+<!-- popup -->
 
 <div class="popup" id="popup">
 
@@ -203,9 +258,8 @@ font-size:80px;
 
 สุขสันต์วันเกิดนะ 🎂<br><br>
 
-ขอให้ปีนี้มีแต่รอยยิ้ม  
-มีความสุขมาก ๆ  
-และมีเรื่องดี ๆ เข้ามาเยอะ ๆ  
+ขอให้ปีนี้เต็มไปด้วยรอยยิ้ม  
+และความสุขมาก ๆ  
 
 ขอบคุณที่เข้ามาในชีวิตเรานะ :)
 
@@ -259,6 +313,30 @@ setTimeout(()=>heart.remove(),6000);
 
 setInterval(createHeart,500);
 
+/* fireworks */
+
+function firework(){
+
+for(let i=0;i<20;i++){
+
+let f=document.createElement("div");
+
+f.className="firework";
+
+f.innerHTML="✨";
+
+f.style.left=Math.random()*100+"vw";
+
+f.style.top=Math.random()*60+"vh";
+
+document.body.appendChild(f);
+
+setTimeout(()=>f.remove(),1000);
+
+}
+
+}
+
 /* blow candle */
 
 function blowCandle(){
@@ -284,6 +362,7 @@ let volume=data.reduce((a,b)=>a+b)/data.length;
 if(volume>80){
 
 document.getElementById("candle").innerHTML="💨";
+firework();
 
 }
 
